@@ -1,12 +1,11 @@
-// GKD 精简安全订阅 | 仅明确允许的应用可执行规则
-// 禁止对银行、支付、贷款、证券、保险、购物及其他未列出应用执行规则。
-// 本规则仅经过静态筛选，未在全部设备/版本实测；不保证零误触。
-// GKD 无障碍权限仍可能访问其他应用界面，规则白名单并不构成系统权限隔离。
+// 静态精选 GKD 规则：仅限明确包名和部分明确广告控件，不自动确认或付款
+// 不含银行、支付、证券、保险、贷款等金融软件；微信、QQ、闲鱼也默认排除
+// 社区规则静态摘选；并未经过真机测试，界面更新后仍可能误触；勿同时启用其他危险订阅
 {
   "id": 839202611,
-  "name": "GKD-安全精选精简订阅",
-  "version": 1,
-  "author": "选自公开社区规则（来源：Lin-arm/GKD_subscription）；经过人工精简",
+  "name": "GKD-常用应用安全精选规则",
+  "version": 2,
+  "author": "依据本机应用白名单、参考 Lin-arm/GKD_subscription 公开规则；人工精简，非原项目官方发布",
   "categories": [],
   "globalGroups": [
     {
@@ -45,90 +44,96 @@
   ],
   "apps": [
     {
-      "id": "tv.danmaku.bili",
-      "name": "哔哩哔哩",
+      "id": "com.alibaba.wireless",
+      "name": "阿里巴巴1688",
       "groups": [
         {
-          "key": -1,
-          "name": "开屏广告-控件ID",
+          "key": 2,
+          "name": "首页广告弹窗-关闭",
           "enable": true,
-          "fastQuery": true,
           "actionMaximum": 1,
-          "rules": [
-            {
-              "key": 0,
-              "matches": "[vid=\"count_down\" || vid=\"skip\"][visibleToUser=true]"
-            }
-          ],
-          "matchTime": 8000,
           "resetMatch": "app",
-          "matchRoot": true
-        },
-        {
-          "key": 0,
-          "name": "局部广告-评论区公告横幅",
-          "enable": true,
+          "matchTime": 12000,
           "fastQuery": true,
-          "actionMaximum": 1,
           "rules": [
             {
               "key": 0,
-              "matches": "LinearLayout[vid=\"ad_tint_frame\"] > ImageView[vid=\"close\"][desc=\"关闭\"]",
-              "excludeActivityIds": [
-                "com.bilibili.bililive.room.ui.roomv3.LiveRoomActivityV3",
-                ".MainActivityV2"
-              ]
+              "matches": "@Image[text*=\"FXa-124-124\"][visibleToUser=true] <<n [vid=\"v_yacht_float_cell\"]",
+              "fastQuery": true,
+              "activityIds": ".launch.home.V5HomeActivity"
             }
           ]
         }
       ]
     },
     {
-      "id": "com.ss.android.ugc.aweme",
-      "name": "抖音",
+      "id": "com.alicloud.databox",
+      "name": "阿里云盘",
+      "groups": [
+        {
+          "key": 7,
+          "name": "传输列表广告-关闭",
+          "enable": true,
+          "actionMaximum": 1,
+          "resetMatch": "app",
+          "matchTime": 12000,
+          "fastQuery": true,
+          "rules": [
+            {
+              "key": 0,
+              "matches": "[vid=\"close\"]",
+              "fastQuery": true,
+              "activityIds": ".transferpage.TransferListActivity"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "com.autonavi.minimap",
+      "name": "高德地图",
       "groups": [
         {
           "key": -1,
           "name": "开屏广告-跳过",
           "enable": true,
-          "fastQuery": true,
           "actionMaximum": 1,
+          "resetMatch": "app",
+          "matchTime": 8000,
+          "fastQuery": true,
           "rules": [
             {
               "key": 0,
               "matches": "[text*=\"跳过\"][text.length<10][width<500 && height<300][visibleToUser=true]",
-              "excludeActivityIds": ".search.activity.SearchResultActivity"
+              "fastQuery": true
             }
-          ],
-          "matchTime": 8000,
-          "resetMatch": "app"
+          ]
         }
       ]
     },
     {
-      "id": "com.xingin.xhs",
-      "name": "小红书",
+      "id": "com.baidu.netdisk",
+      "name": "百度网盘",
       "groups": [
         {
-          "key": 0,
-          "name": "开屏广告-倒计时专用控件",
+          "key": 2,
+          "name": "局部广告-视频播放页广告关闭",
           "enable": true,
           "fastQuery": true,
           "actionMaximum": 1,
           "rules": [
             {
               "key": 0,
-              "matches": "[vid=\"splash_count_down_view\"]"
+              "matches": "[vid=\"rl_ad_root\"] > [vid=\"iv_close\"][visibleToUser=true]",
+              "activityIds": ".video.VideoPlayerActivity"
             }
-          ],
-          "matchTime": 8000,
-          "resetMatch": "app"
+          ]
         }
       ]
     },
     {
-      "id": "com.netease.cloudmusic",
-      "name": "网易云音乐",
+      "id": "com.baidu.tieba",
+      "name": "百度贴吧",
       "groups": [
         {
           "key": 0,
@@ -139,12 +144,7 @@
           "rules": [
             {
               "key": 0,
-              "matches": "[text*=\"跳过\" || text*=\"Skip\"][text.length<10][width<500 && height<200][visibleToUser=true]",
-              "excludeActivityIds": [
-                ".music.biz.setting.activity.SettingActivity",
-                ".music.biz.search.activity.SearchActivity",
-                ".music.biz.rn.activity.BgMainProcessRNActivity"
-              ]
+              "matches": "TextView[text^=\"跳过\"][text.length<=10]"
             }
           ],
           "matchTime": 8000,
@@ -179,23 +179,42 @@
       ]
     },
     {
-      "id": "com.baidu.tieba",
-      "name": "百度贴吧",
+      "id": "com.dianping.v1",
+      "name": "大众点评",
       "groups": [
         {
-          "key": 0,
-          "name": "开屏广告-跳过",
+          "key": 1,
+          "name": "首页推荐关注弹窗-关闭",
           "enable": true,
-          "fastQuery": true,
           "actionMaximum": 1,
+          "resetMatch": "app",
+          "matchTime": 12000,
+          "fastQuery": true,
           "rules": [
             {
               "key": 0,
-              "matches": "TextView[text^=\"跳过\"][text.length<=10]"
+              "matches": "FrameLayout[id=\"android:id/content\"] >2 FrameLayout > ImageView + FrameLayout[id=null][desc=\"关闭\"][clickable=true]",
+              "fastQuery": true,
+              "activityIds": "com.dianping.main.guide.SplashActivity"
             }
-          ],
-          "matchTime": 8000,
-          "resetMatch": "app"
+          ]
+        },
+        {
+          "key": 4,
+          "name": "首页弹窗广告-关闭",
+          "enable": true,
+          "actionMaximum": 1,
+          "resetMatch": "app",
+          "matchTime": 12000,
+          "fastQuery": true,
+          "rules": [
+            {
+              "key": 0,
+              "matches": "[vid=\"operate_cross_icon\"]",
+              "fastQuery": true,
+              "activityIds": ".NovaMainActivity"
+            }
+          ]
         }
       ]
     },
@@ -222,20 +241,236 @@
       ]
     },
     {
-      "id": "com.xunlei.downloadprovider",
-      "name": "迅雷",
+      "id": "com.duokan.reader",
+      "name": "多看阅读",
+      "groups": [
+        {
+          "key": 2,
+          "name": "首页弹窗广告-关闭",
+          "enable": true,
+          "actionMaximum": 1,
+          "resetMatch": "app",
+          "matchTime": 12000,
+          "fastQuery": true,
+          "rules": [
+            {
+              "key": 0,
+              "matches": "[vid=\"store_feed_layer_close\"]",
+              "fastQuery": true,
+              "activityIds": ".DkMainActivity"
+            }
+          ]
+        },
+        {
+          "key": 3,
+          "name": "退出阅读推荐弹窗-关闭",
+          "enable": true,
+          "actionMaximum": 1,
+          "resetMatch": "app",
+          "fastQuery": true,
+          "rules": [
+            {
+              "key": 0,
+              "matches": "[vid=\"reading_stop_read_recommend_stop\"]",
+              "fastQuery": true,
+              "activityIds": ".DkMainActivity"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "com.flyersoft.seekbooks",
+      "name": "搜书大师",
+      "groups": [
+        {
+          "key": 1,
+          "name": "开屏广告-跳过",
+          "enable": true,
+          "actionMaximum": 1,
+          "resetMatch": "app",
+          "matchTime": 8000,
+          "fastQuery": true,
+          "rules": [
+            {
+              "key": 0,
+              "matches": "[text*=\"跳过\"][text.length<10][width<500 && height<300][visibleToUser=true]",
+              "fastQuery": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "com.google.android.youtube",
+      "name": "YouTube",
       "groups": [
         {
           "key": 0,
-          "name": "开屏广告-跳过（不含坐标点击）",
+          "name": "视频广告-仅点击跳过",
+          "enable": true,
+          "fastQuery": true,
+          "rules": [
+            {
+              "key": 0,
+              "matches": "[vid=\"skip_ad_button\" || vid=\"modern_skip_ad_text\"]",
+              "activityIds": [
+                "com.google.android.apps.youtube.app.watchwhile.WatchWhileActivity",
+                "com.google.android.apps.youtube.app.watchwhile.MainActivity"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "com.jd.app.reader",
+      "name": "京东读书",
+      "groups": [
+        {
+          "key": 0,
+          "name": "开屏广告-指定跳过控件",
+          "enable": true,
+          "actionMaximum": 1,
+          "resetMatch": "app",
+          "matchTime": 8000,
+          "fastQuery": true,
+          "rules": [
+            {
+              "key": 0,
+              "matches": "[vid=\"mJumpBtn\"][visibleToUser=true]",
+              "fastQuery": true
+            }
+          ]
+        },
+        {
+          "key": 2,
+          "name": "首页弹窗广告-关闭",
+          "enable": true,
+          "actionMaximum": 1,
+          "resetMatch": "app",
+          "matchTime": 12000,
+          "fastQuery": true,
+          "rules": [
+            {
+              "key": 0,
+              "matches": "[vid=\"mCloseBtn\"][visibleToUser=true]",
+              "fastQuery": true,
+              "activityIds": "com.jingdong.app.reader.main.ui.JdMainActivity"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "com.jd.jxj",
+      "name": "京粉",
+      "groups": [
+        {
+          "key": 1,
+          "name": "首页弹窗广告-关闭",
+          "enable": true,
+          "actionMaximum": 1,
+          "resetMatch": "app",
+          "matchTime": 12000,
+          "fastQuery": true,
+          "rules": [
+            {
+              "key": 0,
+              "matches": "[vid=\"popup_close_imgid\"]",
+              "fastQuery": true,
+              "activityIds": ".modules.main.SlidingTabActivity"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "com.jingdong.app.mall",
+      "name": "京东",
+      "groups": [
+        {
+          "key": 0,
+          "name": "开屏广告-跳过",
+          "enable": true,
+          "actionMaximum": 1,
+          "resetMatch": "app",
+          "matchTime": 8000,
+          "fastQuery": true,
+          "rules": [
+            {
+              "key": 0,
+              "matches": "[text*=\"跳过\"][text.length<10][width<500 && height<300][visibleToUser=true]",
+              "fastQuery": true,
+              "excludeActivityIds": "com.jd.lib.search.view.Activity.SearchActivity"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "com.lemon.lv",
+      "name": "剪映",
+      "groups": [
+        {
+          "key": 1,
+          "name": "选素材页面推广广告-关闭",
+          "enable": true,
+          "actionMaximum": 1,
+          "resetMatch": "app",
+          "fastQuery": true,
+          "rules": [
+            {
+              "key": 0,
+              "matches": "@LynxFlattenUI[clickable=true][visibleToUser=true] +6 [text=\"立即下载\"]",
+              "fastQuery": true,
+              "activityIds": "com.vega.libcutsame.select.view.CutSameSelectMediaActivity"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "com.max.xiaoheihe",
+      "name": "小黑盒",
+      "groups": [
+        {
+          "key": 2,
+          "name": "收藏帖子后推荐关注卡片-关闭",
+          "enable": true,
+          "actionMaximum": 1,
+          "resetMatch": "app",
+          "fastQuery": true,
+          "rules": [
+            {
+              "key": 0,
+              "matches": "[vid=\"iv_notify_close\"]",
+              "fastQuery": true,
+              "activityIds": ".module.bbs.post.ui.activitys.WebNewsPostPageActivity"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "com.netease.cloudmusic",
+      "name": "网易云音乐",
+      "groups": [
+        {
+          "key": 0,
+          "name": "开屏广告-跳过",
           "enable": true,
           "fastQuery": true,
           "actionMaximum": 1,
           "rules": [
             {
               "key": 0,
-              "matches": "[text*=\"跳过\"][text.length<10][width<500 && height<300][visibleToUser=true]",
-              "excludeActivityIds": ".search.ui.search.SearchOperateActivity"
+              "matches": "[text*=\"跳过\" || text*=\"Skip\"][text.length<10][width<500 && height<200][visibleToUser=true]",
+              "excludeActivityIds": [
+                ".music.biz.setting.activity.SettingActivity",
+                ".music.biz.search.activity.SearchActivity",
+                ".music.biz.rn.activity.BgMainProcessRNActivity"
+              ]
             }
           ],
           "matchTime": 8000,
@@ -279,42 +514,278 @@
       ]
     },
     {
-      "id": "com.google.android.youtube",
-      "name": "YouTube",
+      "id": "com.quark.browser",
+      "name": "夸克浏览器",
       "groups": [
         {
-          "key": 0,
-          "name": "视频广告-仅点击跳过",
+          "key": 5,
+          "name": "浏览器内广告关闭控件",
           "enable": true,
+          "actionMaximum": 1,
+          "resetMatch": "app",
           "fastQuery": true,
           "rules": [
             {
               "key": 0,
-              "matches": "[vid=\"skip_ad_button\" || vid=\"modern_skip_ad_text\"]",
-              "activityIds": [
-                "com.google.android.apps.youtube.app.watchwhile.WatchWhileActivity",
-                "com.google.android.apps.youtube.app.watchwhile.MainActivity"
-              ]
+              "matches": "[vid=\"ad_close_layout_container\" || vid=\"rel_close\"][visibleToUser=true]",
+              "fastQuery": true,
+              "activityIds": "com.ucpro.BrowserActivity"
+            }
+          ]
+        },
+        {
+          "key": 6,
+          "name": "浏览器内广告附加关闭控件",
+          "enable": true,
+          "actionMaximum": 1,
+          "resetMatch": "app",
+          "fastQuery": true,
+          "rules": [
+            {
+              "key": 0,
+              "matches": "[vid=\"append_element_view_remove_ad_ll\"][visibleToUser=true]",
+              "fastQuery": true,
+              "activityIds": "com.ucpro.BrowserActivity"
             }
           ]
         }
       ]
     },
     {
-      "id": "com.baidu.netdisk",
-      "name": "百度网盘",
+      "id": "com.sankuai.meituan",
+      "name": "美团",
       "groups": [
         {
-          "key": 2,
-          "name": "局部广告-视频播放页广告关闭",
+          "key": -1,
+          "name": "开屏广告-跳过",
+          "enable": true,
+          "actionMaximum": 1,
+          "resetMatch": "app",
+          "matchTime": 8000,
+          "fastQuery": true,
+          "rules": [
+            {
+              "key": 0,
+              "matches": "TextView[text*=\"跳过\"][text.length<8][clickable=true]",
+              "fastQuery": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "com.smzdm.client.android",
+      "name": "什么值得买",
+      "groups": [
+        {
+          "key": 1,
+          "name": "首页活动弹窗-关闭",
+          "enable": true,
+          "actionMaximum": 1,
+          "resetMatch": "app",
+          "matchTime": 12000,
+          "fastQuery": true,
+          "rules": [
+            {
+              "key": 0,
+              "matches": "[vid=\"dialog_home_close\"]",
+              "fastQuery": true,
+              "activityIds": ".app.HomeActivity"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "com.ss.android.ugc.aweme",
+      "name": "抖音",
+      "groups": [
+        {
+          "key": -1,
+          "name": "开屏广告-跳过",
           "enable": true,
           "fastQuery": true,
           "actionMaximum": 1,
           "rules": [
             {
               "key": 0,
-              "matches": "[vid=\"rl_ad_root\"] > [vid=\"iv_close\"][visibleToUser=true]",
-              "activityIds": ".video.VideoPlayerActivity"
+              "matches": "[text*=\"跳过\"][text.length<10][width<500 && height<300][visibleToUser=true]",
+              "excludeActivityIds": ".search.activity.SearchResultActivity"
+            }
+          ],
+          "matchTime": 8000,
+          "resetMatch": "app"
+        }
+      ]
+    },
+    {
+      "id": "com.taobao.etao",
+      "name": "一淘",
+      "groups": [
+        {
+          "key": 2,
+          "name": "首页活动弹窗-关闭",
+          "enable": true,
+          "actionMaximum": 1,
+          "resetMatch": "app",
+          "matchTime": 12000,
+          "fastQuery": true,
+          "rules": [
+            {
+              "key": 0,
+              "matches": "@[width<150 && height<150] <2 FrameLayout < [vid=\"dialog_container\"]",
+              "fastQuery": true,
+              "activityIds": ".app.homev4.HomeV4Activity"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "com.taobao.taobao",
+      "name": "淘宝",
+      "groups": [
+        {
+          "key": -1,
+          "name": "开屏广告-跳过",
+          "enable": true,
+          "actionMaximum": 1,
+          "resetMatch": "app",
+          "matchTime": 8000,
+          "fastQuery": true,
+          "rules": [
+            {
+              "key": 0,
+              "matches": "@[vid*=\"close\"] > [text*=\"跳过\"][text.length<10][width<500 && height<300][visibleToUser=true]",
+              "fastQuery": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "com.wudaokou.hippo",
+      "name": "盒马",
+      "groups": [
+        {
+          "key": 1,
+          "name": "首页促销弹窗-关闭",
+          "enable": true,
+          "actionMaximum": 1,
+          "resetMatch": "app",
+          "matchTime": 12000,
+          "fastQuery": true,
+          "rules": [
+            {
+              "key": 0,
+              "matches": "[vid=\"home_pop_close\"][visibleToUser=true]",
+              "fastQuery": true,
+              "activityIds": ".launcher.splash.SplashActivity"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "com.xingin.xhs",
+      "name": "小红书",
+      "groups": [
+        {
+          "key": 0,
+          "name": "开屏广告-倒计时专用控件",
+          "enable": true,
+          "fastQuery": true,
+          "actionMaximum": 1,
+          "rules": [
+            {
+              "key": 0,
+              "matches": "[vid=\"splash_count_down_view\"]"
+            }
+          ],
+          "matchTime": 8000,
+          "resetMatch": "app"
+        }
+      ]
+    },
+    {
+      "id": "com.xunlei.downloadprovider",
+      "name": "迅雷",
+      "groups": [
+        {
+          "key": 0,
+          "name": "开屏广告-跳过（不含坐标点击）",
+          "enable": true,
+          "fastQuery": true,
+          "actionMaximum": 1,
+          "rules": [
+            {
+              "key": 0,
+              "matches": "[text*=\"跳过\"][text.length<10][width<500 && height<300][visibleToUser=true]",
+              "excludeActivityIds": ".search.ui.search.SearchOperateActivity"
+            }
+          ],
+          "matchTime": 8000,
+          "resetMatch": "app"
+        }
+      ]
+    },
+    {
+      "id": "com.xunmeng.pinduoduo",
+      "name": "拼多多",
+      "groups": [
+        {
+          "key": 0,
+          "name": "开屏广告-跳过",
+          "enable": true,
+          "actionMaximum": 1,
+          "resetMatch": "app",
+          "matchTime": 8000,
+          "fastQuery": true,
+          "rules": [
+            {
+              "key": 0,
+              "matches": "[text*=\"跳过\"][text.length<10][width<500 && height<300][visibleToUser=true]",
+              "fastQuery": true,
+              "excludeActivityIds": ".activity.NewPageActivity"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tv.danmaku.bili",
+      "name": "哔哩哔哩",
+      "groups": [
+        {
+          "key": -1,
+          "name": "开屏广告-控件ID",
+          "enable": true,
+          "fastQuery": true,
+          "actionMaximum": 1,
+          "rules": [
+            {
+              "key": 0,
+              "matches": "[vid=\"count_down\" || vid=\"skip\"][visibleToUser=true]"
+            }
+          ],
+          "matchTime": 8000,
+          "resetMatch": "app",
+          "matchRoot": true
+        },
+        {
+          "key": 0,
+          "name": "局部广告-评论区公告横幅",
+          "enable": true,
+          "fastQuery": true,
+          "actionMaximum": 1,
+          "rules": [
+            {
+              "key": 0,
+              "matches": "LinearLayout[vid=\"ad_tint_frame\"] > ImageView[vid=\"close\"][desc=\"关闭\"]",
+              "excludeActivityIds": [
+                "com.bilibili.bililive.room.ui.roomv3.LiveRoomActivityV3",
+                ".MainActivityV2"
+              ]
             }
           ]
         }
